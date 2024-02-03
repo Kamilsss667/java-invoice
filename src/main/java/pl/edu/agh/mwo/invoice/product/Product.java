@@ -11,6 +11,21 @@ public abstract class Product {
 
 
     protected Product(String name, BigDecimal price, BigDecimal tax) {
+
+        if( name== null){
+            throw new IllegalArgumentException("nazwa nie może być nullem");
+        }
+        if (name.isEmpty()){
+
+            throw new IllegalArgumentException("nazwa nie może być pusta");
+        }
+        if (price == null) {
+            throw new IllegalArgumentException("cena nie może byc nullem");
+        }
+        if (price.intValue() < 0  ) {
+            throw new IllegalArgumentException("cena nie może być ujemna");
+        }
+
         this.name = name;
         this.price = price;
         this.taxPercent = tax;
