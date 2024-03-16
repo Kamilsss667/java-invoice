@@ -2,8 +2,8 @@ package pl.edu.agh.mwo.invoice;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
+
 import pl.edu.agh.mwo.invoice.product.Product;
 
 
@@ -14,6 +14,7 @@ public class Invoice {
         if (product == null) {
             throw new IllegalArgumentException("The product cannot be null");
         }
+        products.put(product, 1);
     }
 
     public void addProduct(Product product, Integer quantity) {

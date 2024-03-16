@@ -14,35 +14,37 @@ public abstract class Product {
 
         if (name == null) {
             throw new IllegalArgumentException("nazwa nie może być nullem");
-        } else if (name.isEmpty()) {
-
+        }
+        if (name.isEmpty()) {
             throw new IllegalArgumentException("nazwa nie może być pusta");
-        } else if (price == null) {
+        }
+        if (price == null) {
             throw new IllegalArgumentException("cena nie może byc nullem");
-        } else if (price.doubleValue() < 0.0) {
+        }
+        if (price.doubleValue() < 0) {
             throw new IllegalArgumentException("cena nie może być ujemna");
-        } else {
+        }
 
             this.name = name;
             this.price = price;
             this.taxPercent = tax;
-        }
+
     }
 
     public String getName() {
-        return this.name;
+        return name;
     }
 
     public BigDecimal getPrice() {
-        return this.price;
+        return price;
     }
 
     public BigDecimal getTaxPercent() {
-        return this.taxPercent;
+        return taxPercent;
     }
 
     public BigDecimal getPriceWithTax() {
-        BigDecimal priceWithTax = this.price.multiply(this.taxPercent).add(this.price);
+        BigDecimal priceWithTax = price.multiply(taxPercent).add(price);
         return priceWithTax;
     }
 }
