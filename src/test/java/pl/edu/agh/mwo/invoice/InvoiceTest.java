@@ -37,7 +37,7 @@ public class InvoiceTest {
     }
 
     @Test
-    public void testInvoiceSubtotalWithTwoDifferentProducts() {
+    public void testInvoiceNetPriceWithTwoDifferentProducts() {
         Product onions = new TaxFreeProduct("Warzywa", new BigDecimal("10"));
         Product apples = new TaxFreeProduct("Owoce", new BigDecimal("10"));
         invoice.addProduct(onions);

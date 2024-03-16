@@ -38,18 +38,15 @@ public class Invoice {
     public BigDecimal getTax() {
         BigDecimal totalTax = BigDecimal.ZERO;
 
-        BigDecimal productPrice;
-        Integer quantity;
-        for(Iterator var3 = this.products.entrySet().iterator(); var3.hasNext(); totalTax = totalTax.add(productPrice.multiply(new BigDecimal(quantity)))) {
-            Map.Entry<Product, Integer> product = (Map.Entry)var3.next();
-            productPrice = ((Product)product.getKey()).getTaxPercent().multiply(((Product)product.getKey()).getPrice());
-            quantity = (Integer)product.getValue();
+        for (Map.Entry<Product, Integer> product : products.entrySet()){
+            BigDecimal productPrice = product.getKey().getTaxPercent().multiply(product.getKey().getPrice());
+            Integer quantity = product.getValue();
+            totalTax = totalTax.add(productPrice.multiply((new BigDecimal(quantity))));
         }
-
         return totalTax;
     }
 
     public BigDecimal getTotal() {
-        return null;
+        return getNetPrice().add(getTax());
     }
 }
