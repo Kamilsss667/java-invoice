@@ -125,4 +125,17 @@ public class InvoiceTest {
     public void testAddingNullProduct() {
         invoice.addProduct(null);
     }
+
+    public Invoice getInvoice() {
+        return invoice;
+    }
+
+    @Test
+    public void InvoiceTestHasNumber() {
+        int number = new Invoice().getInvoiceNumber();
+    }
+
 }
+
+
+
