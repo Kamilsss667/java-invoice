@@ -1,25 +1,36 @@
 package pl.edu.agh.mwo.invoice;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import pl.edu.agh.mwo.invoice.Invoice;
-import pl.edu.agh.mwo.invoice.product.DairyProduct;
-import pl.edu.agh.mwo.invoice.product.OtherProduct;
-import pl.edu.agh.mwo.invoice.product.Product;
-import pl.edu.agh.mwo.invoice.product.TaxFreeProduct;
+import pl.edu.agh.mwo.invoice.product.*;
 
 public class InvoiceTest {
     private Invoice invoice;
+    private Product pr1;
+    private Product pr2;
+    private Product pr3;
+    private Product pr4;
 
     @Before
     public void createEmptyInvoiceForTheTest() {
         invoice = new Invoice();
+        int product1PriceNetto = 10;
+        pr1 = new DairyProduct("Product1", BigDecimal.valueOf(product1PriceNetto));
+        int product2PriceNetto = 20;
+        pr2 = new DairyProduct("Product2", BigDecimal.valueOf(product2PriceNetto));
+        double fuelPriceNetto = 40.5;
+        pr3 = new FuelCanister("Fuel", BigDecimal.valueOf(fuelPriceNetto));
+        double winePriceNetto = 10.5;
+        pr4 = new Alcohols("Wine", BigDecimal.valueOf(winePriceNetto));
+
     }
+
 
     @Test
     public void testEmptyInvoiceHasEmptySubtotal() {
@@ -126,16 +137,52 @@ public class InvoiceTest {
         invoice.addProduct(null);
     }
 
-    public Invoice getInvoice() {
-        return invoice;
+
+    @Test
+    public void testInvoiceHasNumberGreaterThanZero() {
+        Assert.assertThat(new Invoice().getInvoiceNumber(), Matchers.greaterThan(0));
     }
 
     @Test
-    public void InvoiceTestHasNumber() {
-        int number = new Invoice().getInvoiceNumber();
+    public void testInvoiceHasDiffNumbers() {
+        int number1 = new Invoice().getInvoiceNumber();
+        int number2 = new Invoice().getInvoiceNumber();
+        Assert.assertThat(number2, Matchers.greaterThan(number1));
     }
 
-}
+    @Test
+    public void testPrintInvoice() {
+        // Dodanie produktów do faktury
+        invoice.addProduct(pr1, 3);
+        invoice.addProduct(pr2, 2);
 
+        Assert.assertThat(2, Matchers.equalTo(invoice.getAllPositions()));
+    }
+
+    @Test
+    public void testPrintInvoiceWithDuplicates() {
+        // Dodanie produktów do faktury
+        invoice.addProduct(pr1, 3);
+        invoice.addProduct(pr1, 3);
+        invoice.addProduct(pr2, 2);
+        invoice.addProduct(pr2, 2);
+
+        Assert.assertThat(2, Matchers.equalTo(invoice.getAllPositions()));
+    }
+
+    @Test
+    public void testPriceWithExcise() {
+        invoice.addProduct(pr3, 1);
+        invoice.addProduct(pr4, 1);
+
+        double excise = 5.56;
+        BigDecimal fuelPriceWithExcise = pr3.getPrice().add(BigDecimal.valueOf(excise));
+        BigDecimal winePriceWithVatAndExcise = (pr4.getPrice().multiply(BigDecimal.valueOf(1.23))).add(BigDecimal.valueOf(excise));
+
+
+        Assert.assertThat(fuelPriceWithExcise, Matchers.equalTo(pr3.getPriceWithTax().setScale(2, RoundingMode.UP)));
+        Assert.assertThat(winePriceWithVatAndExcise, Matchers.equalTo(pr4.getPriceWithTax()));
+    }
+}
 
 
