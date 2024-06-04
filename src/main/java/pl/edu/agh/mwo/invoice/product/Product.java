@@ -3,8 +3,9 @@ package pl.edu.agh.mwo.invoice.product;
 import java.math.BigDecimal;
 
 public abstract class Product {
-    private final String name;
+    public static final double EXCISE = 5.56;
 
+    private final String name;
     private final BigDecimal price;
 
     private final BigDecimal taxPercent;
@@ -33,6 +34,10 @@ public abstract class Product {
     }
 
     public BigDecimal getPriceWithTax() {
-        return price.multiply(taxPercent).add(price);
+        if (this.getClass() == Alcohols.class || this.getClass() == FuelCanister.class) {
+            return (price.multiply(taxPercent).add(price)).add(BigDecimal.valueOf(EXCISE));
+        }  else {
+            return price.multiply(taxPercent).add(price);
+        }
     }
 }
